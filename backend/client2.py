@@ -3,7 +3,7 @@ import asyncio
 
 async def tcp_echo_client(message, loop):
     # while True:
-    reader, writer = await asyncio.open_connection('2601:644:401:e9b0:69a3:4d4b:438:3dad', 8888,
+    reader, writer = await asyncio.open_connection('', 8888,
                                                        loop=loop)
     # while True:
     print('Send: %r' % message)
