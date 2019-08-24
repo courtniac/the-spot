@@ -23,7 +23,7 @@ async def handle_echo(reader, writer):
     writer.close()
 
 loop = asyncio.get_event_loop()
-coro = asyncio.start_server(handle_echo, '2601:644:401:e9b0:69a3:4d4b:438:3dad', 8888, loop=loop)
+coro = asyncio.start_server(handle_echo, '', 8888, loop=loop)
 server = loop.run_until_complete(coro)
 
 # Serve requests until Ctrl+C is pressed
