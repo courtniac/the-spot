@@ -13,6 +13,7 @@ async def tcp_echo_client(loop):
     global message
     reader, writer = await asyncio.open_connection('192.168.0.14', 8888, loop=loop)
 
+
     while True:
 
         # getInput()
