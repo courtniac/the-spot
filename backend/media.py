@@ -1,4 +1,5 @@
 import sys
+import asyncio
 import spotipy
 import spotipy.util as util
 
@@ -18,6 +19,7 @@ def getActiveDevice():
         for device in device_list:
             if (device['is_active']):
                 return device['id']
+
 def logIn():
     # username = 'andrewkurniawan'
     username = input("Enter Spotify Username:")
@@ -30,13 +32,43 @@ def logIn():
     print("Token is valid:", token)
     if token:
         spotify = spotipy.Spotify(auth=token)
-        spotify.pause_playback(getActiveDevice())
     else:
         print("Can't get token for", username)
 
-# def playbackButtons(cmd):
-#     if cmd == 'play':
-#     elif cmd == 'pause':
+def processCmd(cmd):
+    global spotify
+    device_id = getActiveDevice()
+    if cmd == "play":
+        spotify.start_playback(device_id)
+    elif cmd == "next":
+        spotify.next_track(device_id)
+    elif cmd == "pause":
+        spotify.pause_playback(device_id)
+    elif cmd == "prev":
+        spotify.previous_track(device_id)
+    else:
+        print("Invalid Cmd received")
+
+
+
+async def listen(loop):
+    # while True:
+    global message
+    reader, writer = await asyncio.open_connection('192.168.0.14', 8888, loop=loop)
+
+    while True:
+        data = await reader.read(100)
+        message = data.decode()
+        print('Received: %r' % message)
+        if message != '':
+            processCmd(message)
+        await asyncio.sleep(1)
+
+
+def openListeningSocket():
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(listen(loop))
+    loop.close()
 
 logIn()
 
